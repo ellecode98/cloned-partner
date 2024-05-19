@@ -54,12 +54,14 @@ def load_file(file_path):
 
 def generate_embeddings(data, embeddings, persist_directory):
     """create embeddings"""
-
-    vectorstore = Chroma.from_documents(
-            documents=data, 
-            embedding=embeddings, 
-            persist_directory=persist_directory
-    )
+    if os.path.exists(persist_directory) and os.path.isdir(persist_directory):
+        vectorstore = Chroma(embedding_function=embeddings, persist_directory=persist_directory)
+    else:
+        vectorstore = Chroma.from_documents(
+                documents=data, 
+                embedding=embeddings, 
+                persist_directory=persist_directory
+        )
     
     return vectorstore
 
